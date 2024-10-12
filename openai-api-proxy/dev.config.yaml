@@ -1,0 +1,15 @@
+http:
+  host: "0.0.0.0"
+  port: 8084
+  access_token: "i0jey84SdkFdw5u43780yjr3h7se8nth0yi295nr94ksDngKprEh"
+  mode: "debug"
+chat:
+  # openai key
+  api_keys:
+  - "ey84prEhw5u43780yjr3dDngKiejh7ksSdkFs8nth0y5nr9i2940"
+  # 接口地址
+  base_url: "http://localhost:8083/v1"
+log:
+  # panic,fatal,error,warn,warning,info,debug,trace
+  level: "info"
+  log_path: "runtime/app.log"
