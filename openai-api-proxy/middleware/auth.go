@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
 	"openai-api-proxy/pkg/config"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Auth() gin.HandlerFunc {

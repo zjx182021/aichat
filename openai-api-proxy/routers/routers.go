@@ -1,10 +1,11 @@
 package routers
 
 import (
-	"github.com/gin-gonic/gin"
 	"openai-api-proxy/health"
 	"openai-api-proxy/middleware"
 	"openai-api-proxy/proxy"
+
+	"github.com/gin-gonic/gin"
 )
 
 func InitRouters(r *gin.Engine) {

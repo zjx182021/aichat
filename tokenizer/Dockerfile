@@ -5,6 +5,6 @@ ADD ./tokenizer.py /app
 ADD ./requirements.txt /app
 
 RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn --upgrade pip
-RUN pip install -r --root-user-action = ignore https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn -r requirements.txt
+RUN pip install --root-user-action=ignore -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn -r requirements.txt
 
-CMD ["sh", "-c", "nuxt --module tokenizer.py --workers 2"]
+CMD ["sh", "-c", "nuxt --port ${PORT} --module tokenizer.py --workers 2"]

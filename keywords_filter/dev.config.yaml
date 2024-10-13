@@ -1,0 +1,7 @@
+Server:
+  IP: 0.0.0.0
+  Port: 50053
+  AccessToken: "1234567890qwertyuiop"
+Log:
+  Level: "info"
+  LogPath: "runtimes/logs/app.log"
