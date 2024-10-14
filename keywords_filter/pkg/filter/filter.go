@@ -20,11 +20,18 @@ type filter struct {
 }
 
 func (f *filter) Validate(text string) (bool, string) {
+	text = " " + strings.Trim(text, " ") + " "
+
 	return f.filter.Validate(text)
 }
 
 func (f *filter) FindAll(text string) []string {
-	return f.filter.FindAll(text)
+	text = " " + strings.Trim(text, " ") + " "
+	list := f.filter.FindAll(text)
+	for i := 0; i < cap(list); i++ {
+		list[i] = strings.Trim(list[i], "")
+	}
+	return list
 }
 
 var _filter *filter

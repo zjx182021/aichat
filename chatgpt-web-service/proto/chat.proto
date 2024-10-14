@@ -1,0 +1,72 @@
+syntax = "proto3";
+option go_package = "ai-chat-service/proto";
+package ai_chat_service.zvoice.com;
+
+message ChatCompletionRequest {
+  string message = 1[json_name = "message"];
+  string id = 2[json_name = "id"];
+  string pid = 3[json_name = "p_id"];
+  bool enableContext = 4[json_name = "enable_context"];
+  ChatParam chatParam = 5[json_name = "chat_param"];
+}
+
+message ChatParam {
+  string model = 1[json_name = "model"];
+  int32  maxTokens = 2[json_name = "max_tokens"];
+  float temperature = 3[json_name = "temperature"];
+  float topP = 4[json_name = "top_p"];
+  float presencePenalty = 5[json_name = "presence_penalty"];
+  float frequencyPenalty = 6[json_name = "frequency_penalty"];
+  string botDesc =7[json_name = "bot_desc"];
+  int32 minResponseTokens = 8[json_name = "min_response_tokens"];
+  int32 contextTTL = 9[json_name = "context_ttl"];
+  int32 contextLen = 10[json_name = "context_len"];
+}
+
+// 服务响应消息，非流式响应
+message ChatCompletionResponse {
+  string id = 1 [json_name = "id"];
+  string object = 2 [json_name = "object"];
+  int64 created = 3 [json_name = "created"];
+  string model = 4 [json_name = "model"];
+  repeated  ChatCompletionChoice choices = 5 [json_name = "choices"];
+  Usage usage = 6[json_name = "usage"];
+}
+message ChatCompletionChoice {
+  int32 index = 1[json_name = "index"];
+  ChatCompletionMessage message = 2 [json_name = "message"];
+  string finishReason = 3[json_name = "finish_reason"];
+}
+message ChatCompletionMessage {
+  string role=1[json_name = "role"];
+  string content=2[json_name = "content"];
+  string name=3[json_name = "name"];
+}
+message Usage {
+  int32 promptTokens = 1 [json_name = "prompt_tokens"];
+  int32 completionTokens =2 [json_name = "completion_tokens"];
+  int32 totalTokens      = 3 [json_name = "total_tokens"];
+}
+
+// 服务响应消息，流式响应
+message  ChatCompletionStreamResponse {
+  string id = 1 [json_name = "id"];
+  string object = 2 [json_name = "object"];
+  int64 created = 3 [json_name = "created"];
+  string model = 4 [json_name = "model"];
+  repeated  ChatCompletionStreamChoice choices = 5 [json_name = "choices"];
+}
+message ChatCompletionStreamChoice {
+  int32 index = 1[json_name = "index"];
+  ChatCompletionStreamChoiceDelta delta =2 [json_name = "delta"];
+  string finishReason = 3[json_name="finish_reason"];
+}
+message ChatCompletionStreamChoiceDelta {
+  string content = 1 [json_name = "content"];
+  string role = 2 [json_name = "role"];
+}
+
+service Chat {
+  rpc ChatCompletion(ChatCompletionRequest) returns (ChatCompletionResponse);
+  rpc ChatCompletionStream(ChatCompletionRequest) returns (stream ChatCompletionStreamResponse);
+}
