@@ -61,15 +61,14 @@ func (l *Logger) SetLevel(lvl string) {
 func NewLogger() *Logger {
 	if My_log == nil {
 
-		My_log := &Logger{}
-		My_log.Entry = logrus.NewEntry(logrus.New())
-		My_log.SetLevel(Info)
-		My_log.Entry.Logger.AddHook(&errorhook{})
-		My_log.SetCaller(Defaultcaller)
-		return My_log
-	} else {
-		return My_log
+		mylog := &Logger{}
+		mylog.Entry = logrus.NewEntry(logrus.New())
+		mylog.SetLevel(Info)
+		mylog.Entry.Logger.AddHook(&errorhook{})
+		mylog.SetCaller(Defaultcaller)
+		My_log = mylog
 	}
+	return My_log
 
 }
 

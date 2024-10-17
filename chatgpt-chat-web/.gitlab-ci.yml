@@ -1,0 +1,59 @@
+variables:
+  DEPLOY_ENV: ''
+  DEPLOY_IMG: ''
+  REPO: 'chatgpt-frontend'
+  SERVICE_NAME: 'chatgpt-stack_chatgpt-frontend'
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"
+      variables:
+        DEPLOY_ENV: 'dev'
+        DEPLOY_IMG: "${REPO}:${CI_COMMIT_SHORT_SHA}"
+    - if: $CI_COMMIT_TAG
+      variables:
+        DEPLOY_ENV: 'prod'
+        DEPLOY_IMG: "${REPO}:${CI_COMMIT_TAG}"
+    - when: never
+stages:
+  # 编译阶段
+  - build
+  # 部署阶段（部署到测试环境/部署到生产环境）
+  - deploy
+build-job:
+  stage: build
+  tags:
+    - builder
+  before_script:
+    - docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY}
+  script:
+    - docker build -t ${DOCKER_REGISTRY}/${DEPLOY_IMG} .
+    - docker push ${DOCKER_REGISTRY}/${DEPLOY_IMG}
+
+deploy-dev-job:
+  only:
+    variables:
+      - $DEPLOY_ENV == "dev"
+  stage: deploy
+  tags:
+    - deployer
+  variables:
+    CONF_RM_STR: ""
+  before_script:
+    - docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY}
+  script:
+    - docker service update ${SERVICE_NAME} --image ${DOCKER_REGISTRY}/${DEPLOY_IMG}
+
+deploy-prod-job:
+  only:
+    variables:
+      - $DEPLOY_ENV == "prod"
+  stage: deploy
+  tags:
+    - deployer
+  variables:
+    CONF_RM_STR: ""
+  before_script:
+    - docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PWD} ${DOCKER_REGISTRY}
+  script:
+    - docker service update ${SERVICE_NAME} --image ${DOCKER_REGISTRY}/${DEPLOY_IMG}

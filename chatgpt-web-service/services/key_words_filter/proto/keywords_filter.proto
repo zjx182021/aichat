@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "keywords_filter/proto";
+package keywords_filter;
+
+message FilterReq{
+    string text =1;
+
+}
+
+message ValidateRes{
+    bool ok = 1;
+    string keyword = 2;
+}
+
+message FindAllRes{
+    repeated string keywords = 1;
+}
+
+
+service Filter{
+    rpc Validate(FilterReq)returns (ValidateRes);
+    rpc FindAll(FilterReq) returns (FindAllRes);
+   
+}

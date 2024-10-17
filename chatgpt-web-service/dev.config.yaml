@@ -1,7 +1,7 @@
 Server:
   IP: 0.0.0.0
-  Port: 50053
-  AccessToken: "1234567890qwertyuiop"
+  Port: 50055
+  AccessToken: "ang1chubdev1ozhome256487d22sapguuv1ozhom"
 Log:
   Level: "info"
   LogPath: "runtimes/logs/app.log"
@@ -14,8 +14,53 @@ chat:
   top_p: 0.9
   frequency_penalty: 0.8
   presence_penalty: 0.5
-  bit_desc: "你是一个ai助手，我需要你模拟一名软件工程师来回答我的问题"
+  bot_desc: "你是一个ai助手,我需要你模拟一名软件工程师来回答我的问题"
   min_response_tokens: 2048
   context_ttl: 1800
   context_len: 4
 
+mysql:
+  host: "192.168.88.135"
+  port: 3306
+  username: "root"
+  password: "!Zhang123456"
+  dbname: "aichat"
+  table: "chatget_web_service"
+  max_open_conns: 100
+  max_idle_conns: 50
+  max_life_time: 1800
+  max_conn_lifetime: 1800
+  idle_timeout: 1800
+
+redis:
+  addr: "192.168.88.135:6379"
+  password: ""
+  db: 0
+  pool_size: 100
+  min_idle: 5
+
+dependOn:
+  sensitive:
+    address: "localhost:50053"
+    accessToken: "ang1chubdev1ozhome256487d22sapguuv1ozhom"
+  keywords:
+    address: "localhost:50054"
+    accessToken: "ang1chubdev1ozhome256487d22sapguuv1ozhom"
+  tokenizer:
+    address: "http://192.168.239.161:3002"
+vectorDB:
+  # 访问地址
+  url: "http://lb-4u4r1fk4-1ys6gv3rpmdan420.clb.ap-guangzhou.tencentclb.com:60000"
+  # 用户名
+  username: "root"
+  # 密码
+  pwd: "YaUfVueWZJ20e4ghyLlBT8Dou5OapwpFTUq50oft"
+  database: "ai-chat"
+  # 请求超时时长s
+  timeout: 5
+  # 最大空闲连接数
+  maxIdleConnPerHost: 2
+  # 读一致性： strongConsistency(强一致性)，eventualConsistency(最终一致性)
+  readConsistency: "eventualConsistency"
+  # 空闲连接超时时长s
+  idleConnTimeout: 60

@@ -20,7 +20,7 @@ func (e *CustomError) Error() string {
 	return e.Message
 }
 func UnaryHandler(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
-	if info.FullMethod != "google.golang.org/grpc/health/grpc_health_v1" {
+	if info.FullMethod != "/grpc.health.v1.Health/Check" {
 		err := token_check(ctx)
 		if err != nil {
 			return nil, err
