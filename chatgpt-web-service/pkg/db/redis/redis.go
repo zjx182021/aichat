@@ -24,7 +24,7 @@ func InitRedis() {
 				PoolSize:     config.GetConfig().Redis.PoolSize,
 				MinIdleConns: config.GetConfig().Redis.MinIdle,
 			})
-			_, err := REDIS.Ping(context.Background()).Result()
+			_, err := rr.Ping(context.Background()).Result()
 			if err != nil {
 				panic(err)
 			}

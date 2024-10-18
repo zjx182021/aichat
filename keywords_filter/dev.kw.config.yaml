@@ -1,6 +1,6 @@
 Server:
   IP: 0.0.0.0
-  Port: 50053
+  Port: 50054
   AccessToken: "ang1chubdev1ozhome256487d22sapguuv1ozhom"
 Log:
   Level: "info"

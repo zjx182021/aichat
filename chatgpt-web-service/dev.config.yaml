@@ -19,6 +19,13 @@ chat:
   context_ttl: 1800
   context_len: 4
 
+# http:
+#   host: "0.0.0.0"
+#   port: 8083
+#   access_token: "ey84prEhw5u43780yjr3dDngKiejh7ksSdkFs8nth0y5nr9i2940"
+#   mode: "debug"
+
+  
 mysql:
   host: "192.168.88.135"
   port: 3306
@@ -33,7 +40,7 @@ mysql:
   idle_timeout: 1800
 
 redis:
-  addr: "192.168.88.135:6379"
+  addr: "localhost:6379"
   password: ""
   db: 0
   pool_size: 100
