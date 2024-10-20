@@ -6,7 +6,6 @@ import (
 	metricsbus "chatgpt-web-service/chat-server/metrics_bus"
 	"chatgpt-web-service/chat-server/vector_data"
 	"chatgpt-web-service/pkg/config"
-	predis "chatgpt-web-service/pkg/db/redis"
 	"chatgpt-web-service/pkg/log"
 	"chatgpt-web-service/proto"
 	"chatgpt-web-service/services/tokenizer"
@@ -40,12 +39,13 @@ func NewChatService(db data.IChatRecords, config *config.Config, log log.ILogger
 }
 func (c *ChatServer) ChatCompletion(ctx context.Context, p *proto.ChatCompletionRequest) (*proto.ChatCompletionResponse, error) {
 	app := c.NewApp(p, chatcontext.Newrediscache())
-	predis.InitRedis()
+	// predis.InitRedis()
 	keywords := app.Keywords(p)
 	ok, msg, err := app.Sensitive(p)
 	if err != nil {
 		return nil, err
 	}
+
 	if !ok {
 		res := app.buildChatCompletionResponse(msg)
 		return res, nil
@@ -211,6 +211,7 @@ func (s *ChatServer) ChatCompletionStream(in *proto.ChatCompletionRequest, strea
 				err = stream.Send(startRes)
 				if err != nil {
 					s.log.Error(err)
+					err = stream.Send(endRes)
 					return err
 				}
 				resList := app.buildChatCompletionStreamResponseList(resId, record.AIMsg)

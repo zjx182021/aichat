@@ -178,10 +178,34 @@ func (a *App) buildChatCompletionResponse(msg string) *proto.ChatCompletionRespo
 			CompletionTokens: 0,
 			TotalTokens:      0,
 		},
-		// Model   string                  `protobuf:"bytes,4,opt,name=model,proto3" json:"model,omitempty"`
-		// Choices []*ChatCompletionChoice `protobuf:"bytes,5,rep,name=choices,proto3" json:"choices,omitempty"`
-		// Usage   *Usage                  `protobuf:"bytes,6,opt,name=usage,proto3" json:"usage,omitempty"`
 	}
+}
+func (a *App) buildChatCompletionStreamResponse(id, delta, finishReason string) *proto.ChatCompletionStreamResponse {
+	res := &proto.ChatCompletionStreamResponse{
+		Id:      id,
+		Object:  "chat.completion.chunk",
+		Created: time.Now().Unix(),
+		Model:   "gpt-3.5-turbo-0301",
+		Choices: []*proto.ChatCompletionStreamChoice{
+			{
+				Index: 0,
+				Delta: &proto.ChatCompletionStreamChoiceDelta{
+					Content: delta,
+					Role:    openai.ChatMessageRoleAssistant,
+				},
+				FinishReason: finishReason,
+			},
+		},
+	}
+	return res
+}
+func (a *App) buildChatCompletionStreamResponseList(id, msg string) []*proto.ChatCompletionStreamResponse {
+	list := make([]*proto.ChatCompletionStreamResponse, 0)
+	for _, delta := range msg {
+		list = append(list, a.buildChatCompletionStreamResponse(id, string(delta), ""))
+	}
+
+	return list
 }
 
 func (a *App) buildChatCompletionRequest(in *proto.ChatCompletionRequest, stream bool) (req openai.ChatCompletionRequest,
@@ -213,59 +237,6 @@ func (a *App) buildChatCompletionRequest(in *proto.ChatCompletionRequest, stream
 	}
 	req.MaxTokens = a.openconf.Max_tokens - tokens
 	return
-}
-
-// func (a *App)buildChatCompletionResponse(msg string) openai.ChatCompletionResponse {
-// 	res := openai.ChatCompletionResponse{
-// 		ID:      uuid.New().String(),
-// 		Object:  "chat.completion",
-// 		Created: time.Now().Unix(),
-// 		Model:   "gpt-3.5-turbo-0301",
-// 		Choices: []openai.ChatCompletionChoice{
-// 			{
-// 				Message: openai.ChatCompletionMessage{
-// 					Role:    openai.ChatMessageRoleAssistant,
-// 					Content: msg,
-// 				},
-// 				FinishReason: "stop",
-// 			},
-// 		},
-// 		Usage: openai.Usage{
-// 			PromptTokens:     10,
-// 			CompletionTokens: 20,
-// 			TotalTokens:      30,
-// 		},
-// 	}
-// 	return res
-// }
-
-func (a *App) buildChatCompletionStreamResponseList(id, msg string) []*proto.ChatCompletionStreamResponse {
-	list := make([]*proto.ChatCompletionStreamResponse, 0)
-	for _, delta := range msg {
-		list = append(list, a.buildChatCompletionStreamResponse(id, string(delta), ""))
-	}
-
-	return list
-}
-
-func (a *App) buildChatCompletionStreamResponse(id, delta, finishReason string) *proto.ChatCompletionStreamResponse {
-	res := &proto.ChatCompletionStreamResponse{
-		Id:      id,
-		Object:  "chat.completion.chunk",
-		Created: time.Now().Unix(),
-		Model:   "gpt-3.5-turbo-0301",
-		Choices: []*proto.ChatCompletionStreamChoice{
-			{
-				Index: 0,
-				Delta: &proto.ChatCompletionStreamChoiceDelta{
-					Content: delta,
-					Role:    openai.ChatMessageRoleAssistant,
-				},
-				FinishReason: finishReason,
-			},
-		},
-	}
-	return res
 }
 
 func (a *App) GetContext(id string) []*chatcontext.Message {
